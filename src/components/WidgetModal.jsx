@@ -14,10 +14,10 @@ export const WidgetModal = ({newWidgetName,setNewWidgetName,newWidgetText,
                <h3 className="section-subtitle">Add New Widget</h3>
 
                <input type="text" value={newWidgetName} placeholder="Widget Name"
-                   onChange={(e)=>setNewWidgetName(e.target.value)} className="input-field" />
+                   onChange={(e)=>setNewWidgetName(e.target.value)} className="input-field" required />
 
                <textarea placeholder="Widget Text" value={newWidgetText}
-                onChange={(e)=>setNewWidgetText(e.target.value)} className="textarea-field"></textarea>
+                onChange={(e)=>setNewWidgetText(e.target.value)} className="textarea-field" required></textarea>
  
                 {/* Select dropdown for category  */}
 

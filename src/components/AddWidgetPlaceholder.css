@@ -1,0 +1,34 @@
+
+.add-widget-placeholder {
+  border: 2px dashed #bbb;
+  border-radius: 10px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  min-height: 120px;
+}
+
+.add-widget-placeholder:hover {
+  background: #f0f0f0;
+  border-color: #007bff;
+}
+
+.add-widget-placeholder-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: #007bff;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.add-widget-placeholder-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}

@@ -1,7 +1,4 @@
-import { useState } from "react"
-import { CategorySection } from "./CategorySection.jsx"
-import { Header } from "./Header.jsx"
-import { WidgetModal } from "./WidgetModal.jsx"
+
 
 const initialData = {
        "categories":[
@@ -27,61 +24,86 @@ const initialData = {
          ]
    }
 
+
+
+import React, { useState } from 'react';
+import './Dashboard.css';
+import {Header} from './Header.jsx';
+import {CategorySection} from './CategorySection.jsx';
+import {WidgetModal} from './WidgetModal.jsx';
+
+
 export const Dashboard = () => {
-   const [isModel, setIsModel] = useState(false)
-   const [categories, setCategories] = useState(initialData.categories)
-   const [newWidgetName, setNewWidgetName] =useState("")
-   const [newWidgetText, setNewWidgetText] =useState("")
-   const [selectedCategory, setSelectedCategory] = useState(categories[0]?.name || "")
-   const [nextId, setNextId] = useState(7)
-   const [searchTerm, setSearchTerm] = useState("")
+  const [categories, setCategories] = useState(initialData.categories);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newWidgetName, setNewWidgetName] = useState('');
+  const [newWidgetText, setNewWidgetText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]?.name || '');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [nextId, setNextId] = useState(7);
 
-   function openModel(){
-    setIsModel(true)
-   }
-
-  const closeModal = () => {
-    setIsModel(false);
-    setNewWidgetName('');
-    setNewWidgetText('');
+  
+  const openModal = (catName = categories[0]?.name) => {
+    setSelectedCategory(catName);
+    setIsModalOpen(true);
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setNewWidgetName('');
+    setNewWidgetText('');
+    setSearchTerm('');
+  };
+
+  
   const addWidget = () => {
     if (!newWidgetName || !newWidgetText || !selectedCategory) return;
     const newWidget = { id: nextId, name: newWidgetName, text: newWidgetText };
     setNextId(nextId + 1);
-    setCategories(categories.map(cat => 
-      cat.name === selectedCategory 
-        ? { ...cat, widgets: [...cat.widgets, newWidget] }
-        : cat
-    ));
+    setCategories(cats =>
+      cats.map(c =>
+        c.name === selectedCategory
+          ? { ...c, widgets: [...c.widgets, newWidget] }
+          : c
+      )
+    );
     closeModal();
   };
+
   const removeWidget = (categoryName, widgetId) => {
-    setCategories(categories.map(cat => 
-      cat.name === categoryName 
-        ? { ...cat, widgets: cat.widgets.filter(w => w.id !== widgetId) }
-        : cat
-    ));
+    setCategories(cats =>
+      cats.map(c =>
+        c.name === categoryName
+          ? { ...c, widgets: c.widgets.filter(w => w.id !== widgetId) }
+          : c
+      )
+    );
   };
 
-//!This creates a new array of categories with widgets filtered by name matching the search term (case-insensitive).
   const filteredCategories = categories.map(cat => ({
     ...cat,
-    widgets: cat.widgets.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    widgets: cat.widgets.filter(w =>
+      w.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ),
   }));
-   
+
+  
   return (
     <div className="dashboard-container">
-      <Header openModel={openModel} />
+      <Header openModal={() => openModal()} />
 
-      {categories.map((category)=>(
-          <CategorySection key={category.name} category={category}
-                       removeWidget={removeWidget}/>
+      {categories.map(cat => (
+        <CategorySection
+          key={cat.name}
+          category={cat}
+          removeWidget={removeWidget}
+          openModalForCategory={openModal}   
+        />
       ))}
-      
-      {isModel && 
-      <WidgetModal 
+
+      {isModalOpen && (
+        <WidgetModal
+          closeModal={closeModal}
           newWidgetName={newWidgetName}
           setNewWidgetName={setNewWidgetName}
           newWidgetText={newWidgetText}
@@ -94,7 +116,9 @@ export const Dashboard = () => {
           setSearchTerm={setSearchTerm}
           filteredCategories={filteredCategories}
           removeWidget={removeWidget}
-          closeModal={closeModal}/>}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
+
